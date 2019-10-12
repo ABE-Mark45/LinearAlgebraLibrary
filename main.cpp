@@ -295,23 +295,67 @@ public:
         return out;
     }
 
-    ~Matrix()
-    {
-        for(int i = 0; i < m;i++)
-                delete [] arr[i];
-        delete [] arr;
+    string soln(){
+        Matrix a = *this;
+        Matrix z();
+        if(m != n-1){
+            return "Enter N*(N+1) Dimensions Please" ;
+
+        }
+        Matrix solutions = a.GaussJordan();
+        a = a.GaussJordan();
+        int v1= a.arr[m-1][m-1],v2=a.arr[m-1][m];
+
+
+        if(v1 == 0 && v2 == 0){
+            return "infinite number of solns \n";
+
+        }
+        else if (v1 == 0 && v2 != 0 ){
+            return "no soln\n";
+         //   return 0;
+        }
+
+        cout << "soln is:\n";
+        for(int i=0; i<m; i++){
+            cout << solutions.arr[i][n-1] <<" ";
+        }
+        return "\n";
     }
 
 };
 
+/*
+1 2 3 4
+5 6 7 8
+9 10 11 12
+*/
 
+/*
+ 1 2 3 1
+ -3 -2 -1 2
+ 4 4 4 3
+
+ NO SOLN
+*/
+
+
+/*
+    2 -1 3 5
+    2 2 3 7
+    -2 3 0 -3
+
+    2.5,2/3,2/9
+*/
 int main()
 {
+    int n,m;
+    cin >> n >> m;
     Matrix a = Matrix(3, 2);
     Matrix b = Matrix(2, 2);
-    Matrix c = Matrix(4, 4);
-    for(int i = 0;i < 4;i++)
-        for(int j = 0; j < 4;j++)
+    Matrix c = Matrix(n, m);
+    for(int i = 0;i < n;i++)
+        for(int j = 0; j < m;j++)
             cin >> c.arr[i][j];
     //a.arr[0][0] = 2, a.arr[0][1] = 3, a.arr[1][0] = 5, a.arr[1][1] = 4, a.arr[2][0] = 9, a.arr[2][1] = 10;
 
@@ -319,19 +363,11 @@ int main()
     //cout << endl << c << endl;
     //cout << c.GaussJordan() << endl;
     //cout << c.inverse() << endl;
-    pair<Matrix, Matrix> out = c.LUFactorization();
 
+    //pair<Matrix, Matrix> out = c.LUFactorization();
+    cout << c.soln() << endl;
 
-    cout << out.first * out.second << endl << c << endl;;
+    //cout << out.first * out.second << endl << c << endl;;
 
     return 0;
 }
-
-
-/**
-5 2 3 4
-10 6 7 -8
-2 4 6 9
-8 5 6 7
-A matrix to test
-**/
