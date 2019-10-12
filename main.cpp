@@ -295,6 +295,13 @@ public:
         return out;
     }
 
+    ~Matrix()
+    {
+        for(int i = 0; i < m;i++)
+                delete [] arr[i];
+        delete [] arr;
+    }
+
 };
 
 
@@ -319,3 +326,12 @@ int main()
 
     return 0;
 }
+
+
+/**
+5 2 3 4
+10 6 7 -8
+2 4 6 9
+8 5 6 7
+A matrix to test
+**/
