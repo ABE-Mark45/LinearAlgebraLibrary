@@ -177,10 +177,17 @@ public:
                 if(abs(a.arr[i][i]) > 1e-7)
                     for(int k = i;k < n;k++)
                         a.arr[j][k] = a.arr[j][k] - a.arr[i][k] * tmp / a.arr[i][i];
-                else
+                else if(i < m-1)
                 {
+                    int h = i+1;
+                    while(h < m && (abs(a.arr[h][i]) < 1e-7))
+                        h++;
+
+                    if(h == m)
+                        continue;
+
                     for(int k = 0; k < n;k++)
-                        swap(a.arr[i][k], a.arr[i+1][k]);
+                        swap(a.arr[i][k], a.arr[h][k]);
                     j--;
                 }
             }
@@ -205,16 +212,15 @@ public:
                 if(abs(a.arr[i][i]) > 1e-7)
                     for(int k = i;k < n;k++)
                         a.arr[j][k] = a.arr[j][k] - a.arr[i][k] * tmp / a.arr[i][i];
-
                 else if(i < m-1)
                 {
                     int h = i+1;
-                    while(abs(a.arr[h][i]) < 1e-7 && h < m)
+                    while(h < m && abs(a.arr[h][i]) < 1e-7)
                         h++;
                     if(h == m)
                         continue;
                     for(int k = 0; k < n;k++)
-                        swap(a.arr[i][k], a.arr[i+1][k]);
+                        swap(a.arr[i][k], a.arr[h][k]);
                     j--;
                 }
 
@@ -230,14 +236,13 @@ public:
             }
 
 
-        for(int i = 0;i < a.m;i++)
+        for(int i = 0;i < m;i++)
         {
             double tmp_ratio = a.arr[i][i];
             if(abs(a.arr[i][i]) > 1e-7)
-                for(int j = 0;j < a.n;j++)
+                for(int j = i;j < n;j++)
                     a.arr[i][j] /= tmp_ratio;
         }
-        cout << a << endl;
         return a;
     }
 
@@ -272,15 +277,9 @@ public:
             for(int j = n; j < n*2; j++)
                 a.arr[i][j] = ones.arr[i][j-n];
         a = a.GaussJordan();
-        cout << a << endl;
-        /*
         for(int i = 0; i < n;i++)
             for(int j = n; j < n*2; j++)
-            {
-                //ones.arr[i][j-n] = a.arr[i][j];
-                cout << a.arr[i][i] << endl;
-            }
-*/
+                ones.arr[i][j-n] = a.arr[i][j];
         return ones;
     }
 
@@ -292,63 +291,63 @@ public:
         for(int i = 0;i < limit;i++)
             for(int j = i+1;j < limit;j++)
             {
-
                 double tmp = a.arr[j][i];
                 L.arr[j][i] = tmp / a.arr[i][i];
                 if(abs(a.arr[i][i]) > 1e-7)
                     for(int k = i;k < n;k++)
                         a.arr[j][k] -= a.arr[i][k] * tmp / a.arr[i][i];
-                else
+                else if(i < m-1)
                 {
+                    int h = i+1;
+                    while(h < m && abs(a.arr[h][i]) < 1e-7)
+                        h++;
+                    if(h == m)
+                        continue;
                     for(int k = 0; k < n;k++)
-                        swap(a.arr[i][k], a.arr[i+1][k]);
+                        swap(a.arr[i][k], a.arr[h][k]);
                     j--;
                 }
+                L.arr[j][i] = tmp / a.arr[i][i];
             }
         pair<Matrix, Matrix> out = make_pair(L, a);
         return out;
     }
 
-    ~Matrix()
-    {
-        for(int i = 0; i < m;i++)
-                delete [] arr[i];
-        delete [] arr;
-    }
-
 };
 
-Matrix c = Matrix(4, 4);
 
 int main()
 {
+    Matrix a = Matrix(3, 4);
+    Matrix b = Matrix(2, 2);
 
+    /*
+    Matrix c = Matrix(3, 4);
+    c.arr[0][0] = 1, c.arr[0][1] = 2, c.arr[0][2] = 3, c.arr[0][3] = 4;
+    c.arr[1][0] = 5, c.arr[1][1] = 6, c.arr[1][2] = 7, c.arr[1][3] = 8;
+    c.arr[2][0] = 9, c.arr[2][1] = 10, c.arr[2][2] = 11, c.arr[2][3] = 12;
+    */
+
+
+    Matrix c = Matrix(4, 4);
     c.arr[0][0] = 5, c.arr[0][1] = 2, c.arr[0][2] = 3, c.arr[0][3] = 4;
     c.arr[1][0] = 10, c.arr[1][1] = 6, c.arr[1][2] = 7, c.arr[1][3] = -8;
     c.arr[2][0] = 2, c.arr[2][1] = 4, c.arr[2][2] = 6, c.arr[2][3] = 9;
     c.arr[3][0] = 8, c.arr[3][1] = 5, c.arr[3][2] = 6, c.arr[3][3] = 7;
 
+
+
+    a.arr[0][0] = 2, a.arr[0][1] = 3, a.arr[1][0] = 5, a.arr[1][1] = 4, a.arr[2][0] = 9, a.arr[2][1] = 10;
+
+    b.arr[0][0] = 5, b.arr[0][1] = 4, b.arr[1][0] = 1, b.arr[1][1] = 0;
+
     cout << endl << c << endl;
+    cout << c.GaussianElimination() << endl;
     cout << c.inverse() << endl;
-    //pair<Matrix, Matrix> out = c.LUFactorization();
+    pair<Matrix, Matrix> out = c.LUFactorization();
 
 
-    //cout << "L: " << endl << out.first << endl << "U: " << endl << out.second << endl << c.GaussianElimination() << endl;;
+    cout << out.first << endl << out.second << endl << c << endl;;
 
     return 0;
 }
-
-
-/**
-5 2 3 4
-10 6 7 -8
-2 4 6 9
-8 5 6 7
-A matrix to test
-**/
-
-/**
-1 2 -3
--3 -4 13
-2 1 -5
-**/
